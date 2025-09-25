@@ -1,5 +1,12 @@
 streamlit
 tensorflow
-Pillow
 numpy
-
+pillow
+opencv-python-headless
+matplotlib
+seaborn
+pandas
+scikit-learn
+scikeras
+plotly
+imgaug
