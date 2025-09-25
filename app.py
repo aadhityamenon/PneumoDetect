@@ -1,40 +1,42 @@
+# app.py
 import streamlit as st
 import numpy as np
-from PIL import Image
+import tensorflow as tf
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+from PIL import Image
 
-# Load your trained model (make sure this file exists in the repo)
+# --- Load trained model ---
 @st.cache_resource
 def load_trained_model():
-    return load_model('pneumonia_model.h5')
+    model = load_model("model.h5")  # make sure model.h5 is in the repo
+    return model
 
 model = load_trained_model()
 
-# Function to preprocess uploaded image
-def preprocess_image(image):
-    image = image.convert("RGB")  # Ensure it's RGB
-    image = image.resize((150, 150))  # Adjust size if your model uses different input
-    image_array = np.array(image) / 255.0  # Normalize
-    image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
-    return image_array
+# --- App UI ---
+st.title("🫁 Pneumonia Detection from Chest X-Rays")
+st.write("Upload a chest X-ray and the AI will predict if pneumonia is present.")
 
-# Streamlit UI
-st.title("🩺 Pneumonia Detector")
-st.write("Upload a chest X-ray image and the model will predict whether the person has pneumonia.")
-
-uploaded_file = st.file_uploader("Choose an X-ray image", type=["jpg", "jpeg", "png"])
+# --- File uploader ---
+uploaded_file = st.file_uploader("Choose an X-ray image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded X-ray", use_column_width=True)
+    # Display uploaded image
+    img = Image.open(uploaded_file).convert("RGB")
+    st.image(img, caption="Uploaded X-ray", use_column_width=True)
 
-    processed_image = preprocess_image(image)
-    prediction = model.predict(processed_image)
+    # --- Preprocess the image ---
+    img_resized = img.resize((64, 64))  # adjust size to match your model's input_shape
+    img_array = image.img_to_array(img_resized)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = img_array / 255.0  # normalize if your training did this
 
-    # Assuming binary classification: 0 = Normal, 1 = Pneumonia
-    result = "Pneumonia" if prediction[0][0] > 0.5 else "Normal"
-    confidence = float(prediction[0][0]) if prediction[0][0] > 0.5 else 1 - float(prediction[0][0])
+    # --- Make prediction ---
+    prediction = model.predict(img_array)[0][0]
 
-    st.markdown(f"### 🧠 Prediction: **{result}**")
-    st.markdown(f"Confidence: `{confidence:.2%}`")
-
+    # --- Display result ---
+    if prediction > 0.5:  # sigmoid output threshold
+        st.error(f"⚠️ Prediction: Pneumonia detected (probability: {prediction:.2f})")
+    else:
+        st.success(f"✅ Prediction: Normal lungs (probability: {1 - prediction:.2f})")
