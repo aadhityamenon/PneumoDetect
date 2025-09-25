@@ -9,7 +9,7 @@ from PIL import Image
 # --- Load trained model ---
 @st.cache_resource
 def load_trained_model():
-    model = load_model("model.h5")  # make sure model.h5 is in the repo
+    model = load_model("model.h5") 
     return model
 
 model = load_trained_model()
@@ -27,10 +27,10 @@ if uploaded_file is not None:
     st.image(img, caption="Uploaded X-ray", use_column_width=True)
 
     # --- Preprocess the image ---
-    img_resized = img.resize((64, 64))  # adjust size to match your model's input_shape
+    img_resized = img.resize((64, 64))  
     img_array = image.img_to_array(img_resized)
     img_array = np.expand_dims(img_array, axis=0)
-    img_array = img_array / 255.0  # normalize if your training did this
+    img_array = img_array / 255.0  
 
     # --- Make prediction ---
     prediction = model.predict(img_array)[0][0]
