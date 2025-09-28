@@ -1,12 +1,13 @@
-streamlit
-tensorflow
-numpy
-pillow
-opencv-python-headless
-matplotlib
-seaborn
-pandas
-scikit-learn
+# requirements.txt
+tensorflow>=2.15
 scikeras
-plotly
 imgaug
+streamlit
+pyngrok
+plotly
+seaborn
+opencv-python-headless
+numpy
+pandas
+matplotlib
+gdown
