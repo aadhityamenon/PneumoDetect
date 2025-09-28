@@ -1,0 +1,3 @@
+libgl1
+libgfortran5
+libatlas-base-dev
