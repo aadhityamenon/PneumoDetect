@@ -1,4 +1,6 @@
 import os
+os.environ['TF_NUM_INTEROP_THREADS'] = '1'
+os.environ['TF_NUM_INTRAOP_THREADS'] = '1'
 import random
 import time
 
