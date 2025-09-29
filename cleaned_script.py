@@ -156,7 +156,7 @@ def plot_one_image(data, labels=None, index=None, image_shape=(64, 64, 3)):
     plot_img = image.copy()
     if plot_img.max() <= 1.0:
         plot_img = (plot_img * 255).astype(np.uint8)
-        
+
     plt.imshow(plot_img)
     plt.show()
 
@@ -165,7 +165,7 @@ def combine_data(data_list, labels_list):
 
 def plot_acc(history, xlabel='Epoch #'):
     """history: Keras History object"""
-    hist_dict = history.history
+    hist_dict = history.history_
     epochs = range(1, len(hist_dict.get('loss', [])) + 1)
     df = pd.DataFrame({
         'epoch': list(epochs),
@@ -224,8 +224,8 @@ def CNNClassifier(num_hidden_layers, nn_params):
     model.add(Dropout(0.5))
     model.add(Dense(units=64, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
     model.add(Dropout(0.5))
-    model.add(Dense(units=nn_params['output_neurons'], activation=nn_params['output_activation']))
-
+    model.add(Dense(units=nn_params['output_neurons'], activation=nn_params['output_activation'])
+    )
     opt = tf.keras.optimizers.RMSprop(learning_rate=1e-5)
     model.compile(loss=nn_params['loss'], optimizer=opt, metrics=['accuracy'])
     return model
@@ -289,29 +289,29 @@ if __name__ == "__main__":
         os.system(f"wget -q -O {image_data_path} '{image_data_url}'")
 
     _all_data = np.load(image_data_path)
-    _metadata = get_metadata(metadata_path, ['train', 'test']) 
+    _metadata = get_metadata(metadata_path, ['train', 'test'])
 
     # --- Load Full Training and Test Data ---
     X_train_full, y_train_full = get_data_split('train', flatten=False, all_data = _all_data, metadata = _metadata, image_shape = image_shape)
     y_train_full = np.array([int(x) for x in y_train_full])
-    
+
     X_test_full, y_test_full = get_data_split('test', flatten=False, all_data = _all_data, metadata = _metadata, image_shape = image_shape)
     y_test_full = np.array([int(x) for x in y_test_full])
-    
+
     # --- Model Definition (Transfer Learning VGG16) ---
     def build_transfer_model():
         return TransferClassifier('VGG16', nn_params)
 
     # --- Training Setup ---
-    # ModelCheckpoint will save the best model weights to model.h5
+    # ModelCheckpoint will save the best model weights to model.keras
     checkpoint = ModelCheckpoint(
-        'model.h5', 
-        monitor='val_accuracy', 
-        save_best_only=True, 
+        'model.keras',
+        monitor='val_accuracy',
+        save_best_only=True,
         verbose=1,
         mode='max'
     )
-    
+
     # Use KerasClassifier for Scikit-learn interface
     clf = KerasClassifier(
         model=build_transfer_model,
@@ -325,7 +325,7 @@ if __name__ == "__main__":
     # --- Train and Save ---
     print("\nStarting full Transfer Learning model fit...")
     history = clf.fit(X_train_full, y_train_full)
-    
+
     # Plotting is done on the full history object
     plot_acc(history)
 
@@ -333,5 +333,5 @@ if __name__ == "__main__":
     # We evaluate the performance of the model from the last epoch
     final_score = clf.score(X_test_full, y_test_full)
     print(f"\nFinal Test Accuracy (last epoch): {final_score:.4f}")
-    
-    print("\nTraining complete. The best model is saved as model.h5, ready for deployment.")
+
+    print("\nTraining complete. The best model is saved as model.keras, ready for deployment.")
