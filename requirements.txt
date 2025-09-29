@@ -7,7 +7,7 @@ pyngrok
 plotly
 seaborn
 opencv-python-headless
-numpy
+numpy==1.26.4 
 pandas
 matplotlib
 gdown
