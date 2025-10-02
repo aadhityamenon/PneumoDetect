@@ -6,8 +6,8 @@ plotly
 seaborn
 opencv-python-headless
 numpy==1.26.4 
-tensorFlow: 2.19.0
-scikeras: 0.13.0
+tensorFlow==2.19.0
+scikeras==0.13.0
 pandas
 matplotlib
 gdown
