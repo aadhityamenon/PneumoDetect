@@ -25,11 +25,11 @@ model = load_pneumonia_model(MODEL_PATH)
 # --- 2. Image Preprocessing Function ---
 def preprocess_image(uploaded_file):
     img = Image.open(uploaded_file).convert("RGB")
-    img = img.resize((224, 224))
-    img = np.array(img, dtype=np.float32)
-    img = preprocess_input(img)
+    img = img.resize((64, 64))
+    img = np.array(img, dtype=np.float32) / 255.0
     img = np.expand_dims(img, axis=0)
     return img
+
 
 # --- 3. Prediction Function ---
 def predict_pneumonia(processed_img):
