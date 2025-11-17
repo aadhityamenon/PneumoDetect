@@ -7,7 +7,7 @@ from PIL import Image
 from tensorflow.keras.applications.vgg16 import preprocess_input
 
 # --- Configuration ---
-MODEL_PATH = 'model.keras'
+MODEL_PATH = 'model_new.keras'
 
 # Check if the model exists before trying to load
 if not os.path.exists(MODEL_PATH):
