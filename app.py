@@ -6,7 +6,7 @@ import cv2
 import os
 
 # --- Configuration ---
-MODEL_PATH = 'model.h5'
+MODEL_PATH = 'model.keras'
 IMAGE_SIZE = (64, 64) # Must match the input size your model was trained on
 
 # Check if the model exists before trying to load
