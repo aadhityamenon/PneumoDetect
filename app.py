@@ -5,15 +5,22 @@ from tensorflow.keras.models import load_model
 import os
 from PIL import Image
 from tensorflow.keras.applications.vgg16 import preprocess_input
+import gdown
 
 # --- Configuration ---
 MODEL_PATH = 'model_new.keras'
+# Extract the ID from your Google Drive share link
+DRIVE_FILE_ID = '1gXYyVyZyRraq_jYY8omDw3dHBjP9NNQX'
 
-# Check if the model exists before trying to load
 if not os.path.exists(MODEL_PATH):
-    st.error("Error: The trained model 'model.keras' was not found.")
-    st.markdown("Please upload your trained model file.")
-    st.stop()
+    st.info("Model not found locally. Downloading from Google Drive...")
+    try:
+        # Construct the gdown URL using the ID and output path
+        gdown.download(id=DRIVE_FILE_ID, output=MODEL_PATH, quiet=False)
+        st.success("Model downloaded successfully!")
+    except Exception as e:
+        st.error(f"Error: Could not download the model from Google Drive. Please check the file ID and sharing settings. Details: {e}")
+        st.stop()
 
 # --- 1. Load the Model ---
 @st.cache_resource
