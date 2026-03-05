@@ -1,5 +1,2 @@
 libgl1
 libgfortran5
-numpy
-scipy
-opencv-python-headless
