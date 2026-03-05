@@ -1,3 +1,5 @@
 libgl1
 libgfortran5
-libatlas-dev
+numpy
+scipy
+opencv-python-headless
